@@ -7,7 +7,7 @@
     <style>
         :root {
             --primary: #f7931a;
-            --primary-glow: rgba(247, 147, 26, 0.2);
+            --primary-glow: rgba(247, 147, 26, 0.15);
             --bg-dark: #07090e;
             --card-bg: #111827;
             --card-border: #1f2937;
@@ -17,88 +17,99 @@
             --accent-blue: #3b82f6;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); padding: 25px; }
-        .container { max-width: 1100px; margin: 0 auto; }
+        body { background-color: var(--bg-dark); color: var(--text-main); padding: 40px 20px; display: flex; justify-content: center; }
         
-        /* Top Navigation Header */
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; }
-        .brand-box { display: flex; align-items: center; gap: 12px; }
-        .brand-logo { background: linear-gradient(135deg, #f7931a, #ffb84d); color: #000; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
-        .brand-title h1 { font-size: 1.4rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-        .badge-pro { background: var(--primary); color: #000; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; }
-        .brand-title p { font-size: 0.8rem; color: var(--text-muted); }
+        .app-wrapper { width: 100%; max-width: 900px; background: #0b0f17; border: 1px solid #1e2638; border-radius: 16px; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
 
-        .balance-widget { background: var(--card-bg); border: 1px solid var(--card-border); padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .balance-info small { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .balance-info div { font-size: 1.3rem; font-weight: 800; color: var(--accent-green); }
-        .btn-topup { background: var(--primary); color: #000; border: none; padding: 10px 16px; font-weight: 700; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        /* Top Header Navigation */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; }
+        .brand-box { display: flex; align-items: center; gap: 14px; }
+        .brand-icon { background: rgba(247, 147, 26, 0.15); border: 1px solid var(--primary); color: var(--primary); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .brand-title h1 { font-size: 1.35rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .badge-pro { background: var(--primary); color: #000; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; }
+        .brand-title p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+        .balance-pill { background: rgba(17, 24, 39, 0.8); border: 1px solid #273449; border-radius: 12px; padding: 8px 16px; display: flex; align-items: center; gap: 16px; }
+        .balance-info small { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .balance-info div { font-size: 1.25rem; font-weight: 800; color: var(--accent-green); }
+        .btn-topup { background: var(--primary); color: #000; border: none; padding: 8px 14px; font-weight: 700; font-size: 0.85rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .btn-topup:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        /* Navigation Tabs */
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; }
-        .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
-        .tab-btn.active { background: var(--card-bg); color: var(--primary); border: 1px solid var(--card-border); }
-        
-        /* CRITICAL: Hidden Tab Fix */
-        .tab-content { display: none !important; }
-        .tab-content.active { display: block !important; }
+        /* Tab Navigation Bar */
+        .nav-tabs { display: flex; gap: 12px; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 16px; }
+        .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .tab-btn.active { background: rgba(31, 41, 55, 0.6); color: #fff; border: 1px solid var(--card-border); }
+        .tab-count { background: #273449; color: var(--text-muted); font-size: 0.75rem; padding: 2px 7px; border-radius: 10px; }
+        .tab-btn.active .tab-count { background: var(--primary); color: #000; font-weight: bold; }
 
-        /* Dashboard Grid Layout */
-        .dashboard-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
-        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-        .card h3 { margin-bottom: 18px; color: var(--text-main); font-size: 1.1rem; }
+        /* Tab Visibility Control */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        /* Quick Funds Deposit Section */
-        .quick-funds-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .fund-chip { background: var(--bg-dark); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .fund-chip:hover { border-color: var(--primary); background: rgba(247, 147, 26, 0.05); }
+        /* Core Section Cards */
+        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 22px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .card-header h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+
+        /* Creator Balance Card */
+        .balance-hero-card { background: linear-gradient(180deg, #131d2e 0%, #0d1424 100%); border: 1px solid #1f2e48; border-radius: 14px; padding: 24px; margin-bottom: 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .balance-hero-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .balance-hero-header h3 { font-size: 1.05rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .balance-hero-header p { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        .huge-balance-display { text-align: right; }
+        .huge-balance-display small { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .huge-balance-display div { font-size: 1.8rem; font-weight: 800; color: var(--accent-green); margin-top: 2px; }
+
+        .quick-deposit-title { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .quick-funds-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .fund-chip { background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 10px; padding: 14px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .fund-chip:hover { border-color: var(--primary); background: rgba(247, 147, 26, 0.08); transform: translateY(-2px); }
         .fund-chip span { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
-        .fund-chip strong { color: var(--text-main); font-size: 0.95rem; }
+        .fund-chip strong { color: var(--text-main); font-size: 1.05rem; }
+
+        /* Launchpad Grid Split */
+        .dashboard-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; }
 
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; background: var(--bg-dark); border: 1px solid var(--card-border); color: #fff; border-radius: 8px; font-size: 0.95rem; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; background: #0b0f17; border: 1px solid var(--card-border); color: #fff; border-radius: 8px; font-size: 0.9rem; }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
 
-        .btn-primary { background: var(--primary); color: #000; border: none; padding: 12px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.95rem; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: #000; border: none; padding: 12px 20px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.95rem; transition: 0.2s; }
         .btn-primary:hover { opacity: 0.9; }
 
         /* Modal Styles */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(6px); }
         .hidden { display: none !important; }
-        .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); width: 460px; max-width: 90%; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); width: 450px; max-width: 90%; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
-        .close-btn:hover { color: #fff; }
-        
+
         .btc-conversion-box { background: var(--primary-glow); border: 1px solid var(--primary); border-radius: 10px; padding: 16px; text-align: center; margin: 15px 0; }
-        .btc-conversion-box h3 { color: var(--primary); font-size: 1.6rem; margin: 5px 0; }
-        
+        .btc-conversion-box h3 { color: var(--primary); font-size: 1.5rem; margin: 4px 0; }
         .qr-section { display: flex; flex-direction: column; align-items: center; margin: 15px 0; }
         .qr-section img { border: 4px solid #fff; border-radius: 8px; background: #fff; width: 150px; height: 150px; }
-        
         .copy-wallet-box { display: flex; gap: 8px; margin-bottom: 15px; }
-        .copy-wallet-box input { flex: 1; font-family: monospace; font-size: 0.8rem; background: var(--bg-dark); }
+        .copy-wallet-box input { flex: 1; font-family: monospace; font-size: 0.8rem; background: #0b0f17; }
         .btn-secondary { background: var(--card-border); color: #fff; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-secondary:hover { background: #374151; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Header -->
+    <div class="app-wrapper">
+        <!-- Header Nav -->
         <header>
             <div class="brand-box">
-                <div class="brand-logo">🎧</div>
+                <div class="brand-icon">🎧</div>
                 <div class="brand-title">
                     <h1>PocketBoost <span class="badge-pro">PRO</span></h1>
                     <p>Authentic Audio & YouTube Growth Studio</p>
                 </div>
             </div>
-            <div class="balance-widget">
+            <div class="balance-pill">
                 <div class="balance-info">
                     <small>Available Funds</small>
-                    <div id="userBalance">$0.00</div>
+                    <div id="navUserBalance">$0.00</div>
                 </div>
                 <button class="btn-topup" onclick="openDepositModal(50)">Top Up BTC ₿</button>
             </div>
@@ -106,18 +117,33 @@
 
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
-            <button class="tab-btn active" id="tab-launchpad" onclick="switchTab('launchpad')">⚡ Campaign Launchpad</button>
-            <button class="tab-btn" id="tab-campaigns" onclick="switchTab('campaigns')">📊 Live Campaigns (0)</button>
-            <button class="tab-btn" id="tab-simulator" onclick="switchTab('simulator')">📈 ROI & Royalty Simulator</button>
+            <button class="tab-btn active" id="tab-launchpad" onclick="switchTab('launchpad')">
+                ⚡ Campaign Launchpad
+            </button>
+            <button class="tab-btn" id="tab-campaigns" onclick="switchTab('campaigns')">
+                📊 Live Campaigns <span class="tab-count" id="liveCampaignCount">0</span>
+            </button>
+            <button class="tab-btn" id="tab-simulator" onclick="switchTab('simulator')">
+                📈 ROI & Royalty Simulator
+            </button>
         </div>
 
         <!-- TAB 1: LAUNCHPAD -->
         <div id="launchpadTab" class="tab-content active">
-            <div class="card">
-                <h3>Creator Account Balance</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Instant campaign deployment from your available credit.</p>
-                
-                <h4 style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Quick Funds Deposit</h4>
+            <!-- Creator Account Balance Hero Box -->
+            <div class="balance-hero-card">
+                <div class="balance-hero-header">
+                    <div>
+                        <h3>💳 Creator Account Balance</h3>
+                        <p>Instant campaign deployment from your available credit.</p>
+                    </div>
+                    <div class="huge-balance-display">
+                        <small>Available Funds</small>
+                        <div id="heroUserBalance">$0.00</div>
+                    </div>
+                </div>
+
+                <div class="quick-deposit-title">Quick Funds Deposit</div>
                 <div class="quick-funds-grid">
                     <div class="fund-chip" onclick="openDepositModal(50)">
                         <span>Add</span>
@@ -140,7 +166,9 @@
 
             <div class="dashboard-grid">
                 <div class="card">
-                    <h3>Launch New Promotion Campaign</h3>
+                    <div class="card-header">
+                        <h3>⚡ Launch New Promotion Campaign</h3>
+                    </div>
                     <div class="form-group">
                         <label>Select Growth Package</label>
                         <select id="promoPackage">
@@ -158,11 +186,13 @@
                 </div>
 
                 <div class="card">
-                    <h3>Active Queue Overview</h3>
-                    <div id="activeQueueStatus" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
-                        <p>🟢 System Status: Fully Operational</p>
-                        <p>⚡ Average Delivery Speed: 2,500 views / hr</p>
-                        <p>🔒 Encrypted Bitcoin Settlement Active</p>
+                    <div class="card-header">
+                        <h3>🟢 Active Queue Overview</h3>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+                        <p><strong>System Status:</strong> <span style="color: var(--accent-green);">Fully Operational</span></p>
+                        <p><strong>Delivery Speed:</strong> ~2,500 views / hr</p>
+                        <p><strong>Verification:</strong> Encrypted Bitcoin Settlement Active</p>
                     </div>
                 </div>
             </div>
@@ -171,9 +201,11 @@
         <!-- TAB 2: LIVE CAMPAIGNS -->
         <div id="campaignsTab" class="tab-content">
             <div class="card">
-                <h3>Active Campaign Analytics</h3>
+                <div class="card-header">
+                    <h3>📊 Active Campaign Analytics</h3>
+                </div>
                 <div id="campaignList">
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">No active campaigns found. Deploy your first campaign from the launchpad tab!</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">No active campaigns running. Deploy your first campaign from the launchpad!</p>
                 </div>
             </div>
         </div>
@@ -181,21 +213,23 @@
         <!-- TAB 3: ROI SIMULATOR -->
         <div id="simulatorTab" class="tab-content">
             <div class="card">
-                <h3>Listener Royalty & Unlock Estimator</h3>
+                <div class="card-header">
+                    <h3>📈 Listener Royalty & Unlock Estimator</h3>
+                </div>
                 <div class="form-group">
                     <label>Target Promotion Budget ($ USD):</label>
                     <input type="number" id="simBudget" value="250" oninput="calculateRoi()" />
                 </div>
-                <div style="background: var(--bg-dark); padding: 20px; border-radius: 10px; border: 1px solid var(--card-border); margin-top: 15px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <div style="background: #0b0f17; padding: 20px; border-radius: 10px; border: 1px solid var(--card-border); margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                         <span style="color: var(--text-muted);">Estimated Listener Reach:</span>
                         <strong id="simReach" style="color: #fff;">50,000 Listeners</strong>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                         <span style="color: var(--text-muted);">Estimated Coin Unlocks:</span>
                         <strong id="simUnlocks" style="color: var(--accent-blue);">~3,500 Episodes</strong>
                     </div>
-                    <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--card-border); padding-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--card-border); padding-top: 12px;">
                         <span style="color: var(--text-muted);">Projected Royalties:</span>
                         <strong id="simRoi" style="color: var(--accent-green); font-size: 1.1rem;">$350.00 - $525.00 EST</strong>
                     </div>
@@ -230,7 +264,6 @@
                 </div>
 
                 <div class="copy-wallet-box">
-                    <!-- PASTE YOUR BTC WALLET ADDRESS IN THE VALUE BELOW -->
                     <input type="text" id="btcWalletAddress" value="YOUR_BITCOIN_WALLET_ADDRESS_HERE" readonly />
                     <button type="button" class="btn-secondary" onclick="copyBtcAddress()">Copy</button>
                 </div>
@@ -248,7 +281,7 @@
     </div>
 
     <script>
-        // REPLACE THIS WITH YOUR REAL BITCOIN ADDRESS
+        // PASTE YOUR REAL BITCOIN ADDRESS INSIDE THESE QUOTES:
         const YOUR_BTC_ADDRESS = "YOUR_BITCOIN_WALLET_ADDRESS_HERE";
         
         let currentBtcPriceUsd = 0;
@@ -331,7 +364,9 @@
             }
 
             userWalletBalance -= cost;
-            document.getElementById('userBalance').innerText = `$${userWalletBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            const formatted = `$${userWalletBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('navUserBalance').innerText = formatted;
+            document.getElementById('heroUserBalance').innerText = formatted;
             document.getElementById('targetUrl').value = '';
             alert("Campaign launched successfully!");
         }
