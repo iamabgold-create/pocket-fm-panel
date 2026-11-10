@@ -17,17 +17,31 @@
             --accent-blue: #3b82f6;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); padding: 40px 20px; display: flex; justify-content: center; }
-        
-        .app-wrapper { width: 100%; max-width: 900px; background: #0b0f17; border: 1px solid #1e2638; border-radius: 16px; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+
+        /* AUTH / LOGIN CONTAINER */
+        .auth-wrapper { width: 100%; max-width: 420px; background: #0b0f17; border: 1px solid #1e2638; border-radius: 16px; padding: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); text-align: center; }
+        .auth-logo { background: rgba(247, 147, 26, 0.15); border: 1px solid var(--primary); color: var(--primary); width: 50px; height: 50px; border-radius: 14px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .auth-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+        .auth-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+        .auth-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: #111827; padding: 4px; border-radius: 10px; border: 1px solid var(--card-border); }
+        .auth-tab-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); padding: 8px; border-radius: 7px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        .auth-tab-btn.active { background: var(--card-border); color: #fff; }
+
+        /* DASHBOARD APP WRAPPER */
+        .app-wrapper { width: 100%; max-width: 950px; background: #0b0f17; border: 1px solid #1e2638; border-radius: 16px; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
 
         /* Top Header Navigation */
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .brand-box { display: flex; align-items: center; gap: 14px; }
         .brand-icon { background: rgba(247, 147, 26, 0.15); border: 1px solid var(--primary); color: var(--primary); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
         .brand-title h1 { font-size: 1.35rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .badge-pro { background: var(--primary); color: #000; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px; }
         .brand-title p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .user-chip { background: #111827; border: 1px solid var(--card-border); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+        .btn-logout { background: transparent; border: none; color: #ef4444; font-weight: 600; cursor: pointer; font-size: 0.75rem; }
 
         .balance-pill { background: rgba(17, 24, 39, 0.8); border: 1px solid #273449; border-radius: 12px; padding: 8px 16px; display: flex; align-items: center; gap: 16px; }
         .balance-info small { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -70,7 +84,7 @@
         /* Launchpad Grid Split */
         .dashboard-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; }
 
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
         .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
         .form-group input, .form-group select { width: 100%; padding: 12px; background: #0b0f17; border: 1px solid var(--card-border); color: #fff; border-radius: 8px; font-size: 0.9rem; }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
@@ -96,7 +110,32 @@
 </head>
 <body>
 
-    <div class="app-wrapper">
+    <!-- AUTHENTICATION / LOGIN CONTAINER -->
+    <div id="authScreen" class="auth-wrapper">
+        <div class="auth-logo">🎧</div>
+        <h2 class="auth-title">PocketBoost <span class="badge-pro">PRO</span></h2>
+        <p class="auth-subtitle">Creator Studio Login & Launchpad Portal</p>
+
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" id="authLoginTab" onclick="toggleAuthMode('login')">Sign In</button>
+            <button class="auth-tab-btn" id="authRegisterTab" onclick="toggleAuthMode('register')">Register Account</button>
+        </div>
+
+        <form onsubmit="handleAuthSubmit(event)">
+            <div class="form-group">
+                <label>Pocket FM Creator Email</label>
+                <input type="email" id="authEmail" placeholder="creator@pocketfm.com" required />
+            </div>
+            <div class="form-group">
+                <label>Account Password</label>
+                <input type="password" id="authPassword" placeholder="••••••••" required />
+            </div>
+            <button type="submit" id="authSubmitBtn" class="btn-primary">Sign In to Dashboard</button>
+        </form>
+    </div>
+
+    <!-- MAIN APP DASHBOARD WRAPPER (HIDDEN UNTIL LOGIN) -->
+    <div id="appScreen" class="app-wrapper hidden">
         <!-- Header Nav -->
         <header>
             <div class="brand-box">
@@ -106,12 +145,20 @@
                     <p>Authentic Audio & YouTube Growth Studio</p>
                 </div>
             </div>
-            <div class="balance-pill">
-                <div class="balance-info">
-                    <small>Available Funds</small>
-                    <div id="navUserBalance">$0.00</div>
+
+            <div class="header-actions">
+                <div class="user-chip">
+                    <span id="userDisplayEmail">creator@pocketfm.com</span>
+                    <button class="btn-logout" onclick="handleLogout()">[Logout]</button>
                 </div>
-                <button class="btn-topup" onclick="openDepositModal(50)">Top Up BTC ₿</button>
+
+                <div class="balance-pill">
+                    <div class="balance-info">
+                        <small>Available Funds</small>
+                        <div id="navUserBalance">$0.00</div>
+                    </div>
+                    <button class="btn-topup" onclick="openDepositModal(50)">Top Up BTC ₿</button>
+                </div>
             </div>
         </header>
 
@@ -281,13 +328,50 @@
     </div>
 
     <script>
-        // PASTE YOUR REAL BITCOIN ADDRESS INSIDE THESE QUOTES:
+        // PASTE YOUR REAL BITCOIN ADDRESS AT LINE 316 / 319:
         const YOUR_BTC_ADDRESS = "YOUR_BITCOIN_WALLET_ADDRESS_HERE";
         
         let currentBtcPriceUsd = 0;
         let userWalletBalance = 0.00;
+        let authMode = 'login';
 
         document.getElementById('btcWalletAddress').value = YOUR_BTC_ADDRESS;
+
+        // AUTH SYSTEM LOGIC
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('pocketboost_user');
+            if (savedUser) {
+                showApp(savedUser);
+            }
+        });
+
+        function toggleAuthMode(mode) {
+            authMode = mode;
+            document.getElementById('authLoginTab').classList.toggle('active', mode === 'login');
+            document.getElementById('authRegisterTab').classList.toggle('active', mode === 'register');
+            document.getElementById('authSubmitBtn').innerText = mode === 'login' ? 'Sign In to Dashboard' : 'Create Creator Account';
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            if (email) {
+                localStorage.setItem('pocketboost_user', email);
+                showApp(email);
+            }
+        }
+
+        function showApp(email) {
+            document.getElementById('userDisplayEmail').innerText = email;
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('appScreen').classList.remove('hidden');
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('pocketboost_user');
+            document.getElementById('appScreen').classList.add('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+        }
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
