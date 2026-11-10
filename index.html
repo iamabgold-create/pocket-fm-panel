@@ -96,7 +96,7 @@
             <div class="balance-widget">
                 <div class="balance-info">
                     <small>Available Funds</small>
-                    <div id="userBalance">$1,180.00</div>
+                    <div id="userBalance">$0.00</div>
                 </div>
                 <button class="btn-topup" onclick="openDepositModal(50)">Top Up BTC ₿</button>
             </div>
@@ -105,7 +105,7 @@
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
             <button class="tab-btn active" id="tab-launchpad" onclick="switchTab('launchpad')">⚡ Campaign Launchpad</button>
-            <button class="tab-btn" id="tab-campaigns" onclick="switchTab('campaigns')">📊 Live Campaigns (1)</button>
+            <button class="tab-btn" id="tab-campaigns" onclick="switchTab('campaigns')">📊 Live Campaigns (0)</button>
             <button class="tab-btn" id="tab-simulator" onclick="switchTab('simulator')">📈 ROI & Royalty Simulator</button>
         </div>
 
@@ -171,20 +171,7 @@
             <div class="card">
                 <h3>Active Campaign Analytics</h3>
                 <div id="campaignList">
-                    <div style="background: var(--bg-dark); padding: 15px; border-radius: 10px; border: 1px solid var(--card-border);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <strong style="color: var(--primary);">Pocket FM Listener Jumpstart</strong>
-                            <span style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">● Delivering</span>
-                        </div>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; word-break: break-all;">Target: https://pocketfm.app/story/sample-romance-thriller</p>
-                        <div style="background: var(--card-border); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 6px;">
-                            <div style="background: var(--primary); width: 68%; height: 100%;"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
-                            <span>Progress: 6,800 / 10,000 views</span>
-                            <span>68% Complete</span>
-                        </div>
-                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">No active campaigns found. Deploy your first campaign from the launchpad tab!</p>
                 </div>
             </div>
         </div>
@@ -241,7 +228,8 @@
                 </div>
 
                 <div class="copy-wallet-box">
-                    <input type="text" id="btcWalletAddress" value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh" readonly />
+                    <!-- PASTE YOUR BTC WALLET ADDRESS IN THE VALUE BELOW -->
+                    <input type="text" id="btcWalletAddress" value="YOUR_BITCOIN_WALLET_ADDRESS_HERE" readonly />
                     <button type="button" class="btn-secondary" onclick="copyBtcAddress()">Copy</button>
                 </div>
 
@@ -258,9 +246,13 @@
     </div>
 
     <script>
-        const YOUR_BTC_ADDRESS = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
+        // REPLACE THIS WITH YOUR REAL BITCOIN ADDRESS
+        const YOUR_BTC_ADDRESS = "YOUR_BITCOIN_WALLET_ADDRESS_HERE";
+        
         let currentBtcPriceUsd = 0;
-        let userWalletBalance = 1180.00;
+        let userWalletBalance = 0.00;
+
+        document.getElementById('btcWalletAddress').value = YOUR_BTC_ADDRESS;
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -355,5 +347,4 @@
         }
     </script>
 </body>
-</html>
- 
+</html> 
