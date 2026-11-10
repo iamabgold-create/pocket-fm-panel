@@ -119,20 +119,20 @@
         <p class="auth-subtitle">Creator Studio Login & Launchpad Portal</p>
 
         <div class="auth-tabs">
-            <button class="auth-tab-btn active" id="authLoginTab" onclick="toggleAuthMode('login')">Sign In</button>
-            <button class="auth-tab-btn" id="authRegisterTab" onclick="toggleAuthMode('register')">Register Account</button>
+            <button class="auth-tab-btn active" id="authLoginTab" type="button" onclick="toggleAuthMode('login')">Sign In</button>
+            <button class="auth-tab-btn" id="authRegisterTab" type="button" onclick="toggleAuthMode('register')">Register Account</button>
         </div>
 
         <div id="authErrorMsg" class="auth-error"></div>
 
-        <form onsubmit="handleAuthSubmit(event)">
+        <form id="authForm" onsubmit="handleAuthSubmit(event)" novalidate>
             <div class="form-group">
-                <label>Pocket FM Creator Email</label>
-                <input type="email" id="authEmail" placeholder="creator@pocketfm.com" required />
+                <label>Email Address</label>
+                <input type="email" id="authEmail" placeholder="yourname@domain.com" required />
             </div>
             <div class="form-group">
                 <label>Account Password (Min 6 Characters)</label>
-                <input type="password" id="authPassword" placeholder="••••••••" minlength="6" required />
+                <input type="password" id="authPassword" placeholder="••••••••" required />
             </div>
             <button type="submit" id="authSubmitBtn" class="btn-primary">Sign In to Dashboard</button>
         </form>
@@ -152,8 +152,8 @@
 
             <div class="header-actions">
                 <div class="user-chip">
-                    <span id="userDisplayEmail">creator@pocketfm.com</span>
-                    <button class="btn-logout" onclick="handleLogout()">[Logout]</button>
+                    <span id="userDisplayEmail">user@domain.com</span>
+                    <button class="btn-logout" type="button" onclick="handleLogout()">[Logout]</button>
                 </div>
 
                 <div class="balance-pill">
@@ -161,20 +161,20 @@
                         <small>Available Funds</small>
                         <div id="navUserBalance">$0.00</div>
                     </div>
-                    <button class="btn-topup" onclick="openDepositModal(50)">Top Up BTC ₿</button>
+                    <button class="btn-topup" type="button" onclick="openDepositModal(50)">Top Up BTC ₿</button>
                 </div>
             </div>
         </header>
 
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
-            <button class="tab-btn active" id="tab-launchpad" onclick="switchTab('launchpad')">
+            <button class="tab-btn active" id="tab-launchpad" type="button" onclick="switchTab('launchpad')">
                 ⚡ Campaign Launchpad
             </button>
-            <button class="tab-btn" id="tab-campaigns" onclick="switchTab('campaigns')">
+            <button class="tab-btn" id="tab-campaigns" type="button" onclick="switchTab('campaigns')">
                 📊 Live Campaigns <span class="tab-count" id="liveCampaignCount">0</span>
             </button>
-            <button class="tab-btn" id="tab-simulator" onclick="switchTab('simulator')">
+            <button class="tab-btn" id="tab-simulator" type="button" onclick="switchTab('simulator')">
                 📈 ROI & Royalty Simulator
             </button>
         </div>
@@ -233,7 +233,7 @@
                         <label>Target Link (Pocket FM Story or YouTube URL)</label>
                         <input type="text" id="targetUrl" placeholder="https://pocketfm.app/share/..." />
                     </div>
-                    <button class="btn-primary" onclick="startCampaign()">Deploy Campaign Now</button>
+                    <button class="btn-primary" type="button" onclick="startCampaign()">Deploy Campaign Now</button>
                 </div>
 
                 <div class="card">
@@ -294,7 +294,7 @@
         <div class="modal-card">
             <div class="modal-header">
                 <h2>Top Up Balance via Bitcoin</h2>
-                <button class="close-btn" onclick="closeDepositModal()">&times;</button>
+                <button class="close-btn" type="button" onclick="closeDepositModal()">&times;</button>
             </div>
             
             <div class="modal-body">
@@ -326,13 +326,13 @@
             </div>
 
             <div class="modal-footer" style="margin-top: 15px;">
-                <button class="btn-primary" onclick="submitBtcDeposit()">Submit Deposit for Verification</button>
+                <button class="btn-primary" type="button" onclick="submitBtcDeposit()">Submit Deposit for Verification</button>
             </div>
         </div>
     </div>
 
     <script>
-        // PASTE YOUR REAL BITCOIN ADDRESS HERE:
+        // PASTE YOUR REAL BITCOIN ADDRESS AT LINES 280 & 287 BELOW:
         const YOUR_BTC_ADDRESS = "YOUR_BITCOIN_WALLET_ADDRESS_HERE";
         
         let currentBtcPriceUsd = 0;
@@ -342,7 +342,7 @@
         document.getElementById('btcWalletAddress').value = YOUR_BTC_ADDRESS;
 
         window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('pocketboost_user');
+            const savedUser = localStorage.getItem('pocketboost_email');
             if (savedUser) {
                 showApp(savedUser);
             }
@@ -357,32 +357,43 @@
         }
 
         function handleAuthSubmit(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
+            
             const emailInput = document.getElementById('authEmail');
             const passwordInput = document.getElementById('authPassword');
             const errorBox = document.getElementById('authErrorMsg');
 
-            const email = emailInput.value.trim();
+            const email = emailInput.value.trim().toLowerCase();
             const password = passwordInput.value;
 
-            // Strict Regex Validation for Email Format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                errorBox.innerText = "Please enter a valid email address.";
-                errorBox.style.display = 'block';
-                return;
+            // Strict Email Domain Regex (Requires valid username + @ + domain + .TLD of 2+ letters)
+            const strictEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!email) {
+                showError("Please enter your email address.");
+                return false;
             }
 
-            // Strict Validation for Password Length
-            if (password.length < 6) {
-                errorBox.innerText = "Password must be at least 6 characters long.";
-                errorBox.style.display = 'block';
-                return;
+            if (!strictEmailRegex.test(email)) {
+                showError("Invalid email format! Must be a valid email (e.g. user@domain.com). Gibberish blocked.");
+                return false;
+            }
+
+            if (!password || password.length < 6) {
+                showError("Password must be at least 6 characters long.");
+                return false;
             }
 
             errorBox.style.display = 'none';
-            localStorage.setItem('pocketboost_user', email);
+            localStorage.setItem('pocketboost_email', email);
             showApp(email);
+            return false;
+        }
+
+        function showError(msg) {
+            const errorBox = document.getElementById('authErrorMsg');
+            errorBox.innerText = msg;
+            errorBox.style.display = 'block';
         }
 
         function showApp(email) {
@@ -392,7 +403,7 @@
         }
 
         function handleLogout() {
-            localStorage.removeItem('pocketboost_user');
+            localStorage.removeItem('pocketboost_email');
             document.getElementById('appScreen').classList.add('hidden');
             document.getElementById('authScreen').classList.remove('hidden');
             document.getElementById('authEmail').value = '';
